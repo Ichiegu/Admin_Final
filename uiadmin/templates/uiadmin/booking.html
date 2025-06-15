@@ -405,7 +405,7 @@
                             <td>{{ booking.check_out|date:"M d, Y" }}</td>
                             <td><span class="status {{ booking.status }}">{{ booking.status }}</span></td>
                             <td>
-                                <a href="#" class="edit-btn" data-id="{{ booking.id }}" 
+                                <a href="#" class="edit-btn" data-id="{{ booking.id }}"
                                    data-guest="{{ booking.guest_name }}"
                                    data-service="{{ booking.service.id }}"
                                    data-checkin="{{ booking.check_in|date:'Y-m-d' }}"
@@ -413,7 +413,7 @@
                                    data-status="{{ booking.status }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="#" class="delete-btn" data-id="{{ booking.id }}" 
+                                <a href="#" class="delete-btn" data-id="{{ booking.id }}"
                                    data-booking-id="{{ booking.booking_id }}"
                                    data-guest="{{ booking.guest_name }}">
                                     <i class="fas fa-trash"></i>

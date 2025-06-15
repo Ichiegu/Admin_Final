@@ -62,6 +62,7 @@
             line-height: 1.5;
             min-height: 100vh;
             display: flex;
+            overflow-x: hidden;
         }
 
         /* Sidebar Styles */
@@ -87,7 +88,7 @@
             justify-content: space-between;
         }
 
-        .logo-container {
+       .logo-container {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -101,7 +102,6 @@
     display: block;
     margin: 0 auto;
 }
-
 
         .hamburger {
             display: none;
@@ -202,32 +202,6 @@
             display: flex;
             align-items: center;
             gap: 1.5rem;
-        }
-
-        .notification {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .notification i {
-            font-size: 1.25rem;
-            color: var(--text-light);
-        }
-
-        .badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--danger);
-            color: var(--white);
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 600;
         }
 
         .user-profile {
@@ -680,7 +654,6 @@
             </div>
 
             <div class="user-menu">
-
                 <div class="user-profile" id="userProfile">
                     {% if user.profile_image %}
                         <img src="{{ user.profile_image.url }}" alt="{{ user.get_full_name|default:user.username }}">
