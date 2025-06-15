@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Recent Bookings</h5>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookingModal">
+                        <i class="fas fa-plus"></i> Add New Booking
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Guest</th>
+                                    <th>Service</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                <tr>
+                                    <td>{{ booking.booking_id }}</td>
+                                    <td>{{ booking.guest.username }}</td>
+                                    <td>{{ booking.service.name }}</td>
+                                    <td>{{ booking.check_in|date:"M d, Y" }}</td>
+                                    <td>{{ booking.check_out|date:"M d, Y" }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ booking.status|lower }}">
+                                            {{ booking.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" onclick="viewBooking('{{ booking.id }}')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-warning" onclick="editBooking('{{ booking.id }}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteBooking('{{ booking.id }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Summary Sidebar -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Booking Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="booking-details">
+                        <h6>Guest Information</h6>
+                        <div class="detail-item">
+                            <span>Name:</span>
+                            <span id="summary-name">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Contact:</span>
+                            <span id="summary-contact">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Email:</span>
+                            <span id="summary-email">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Service:</span>
+                            <span id="summary-service">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Check-in:</span>
+                            <span id="summary-checkin">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Check-out:</span>
+                            <span id="summary-checkout">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Guests:</span>
+                            <span id="summary-guests">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Payment:</span>
+                            <span id="summary-payment">--</span>
+                        </div>
+
+                        <h6 class="mt-4">Price Summary</h6>
+                        <div class="price-item">
+                            <span>Service:</span>
+                            <span id="service-price">₱0.00</span>
+                        </div>
+                        <div class="price-item">
+                            <span>Duration:</span>
+                            <span id="duration-days">0 days</span>
+                        </div>
+                        <div class="price-item">
+                            <span>Guests:</span>
+                            <span id="guests-count">0</span>
+                        </div>
+                        <div class="price-item price-total">
+                            <span>Total:</span>
+                            <span id="total-price">₱0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Booking Modal -->
+<div class="modal fade" id="addBookingModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Booking</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="contact" class="form-label">Contact Number <span class="required">*</span></label>
+                                <input type="tel" class="form-control" id="contact" name="contact" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="service" class="form-label">Service Type <span class="required">*</span></label>
+                                <select class="form-control" id="service" name="service" required>
+                                    <option value="">Select a service</option>
+                                    {% for service in services %}
+                                    <option value="{{ service.id }}">{{ service.name }} - ₱{{ service.base_price }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="check_in" class="form-label">Check-in Date <span class="required">*</span></label>
+                                <input type="date" class="form-control" id="check_in" name="check_in" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="check_out" class="form-label">Check-out Date <span class="required">*</span></label>
+                                <input type="date" class="form-control" id="check_out" name="check_out" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="number_of_guests" class="form-label">Number of Guests <span class="required">*</span></label>
+                                <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" required min="1">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="payment_method" class="form-label">Payment Method</label>
+                                <select class="form-control" id="payment_method" name="payment_method">
+                                    <option value="">Select payment method</option>
+                                    <option value="credit_card">Credit Card</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="gcash">GCash</option>
+                                    <option value="paymaya">PayMaya</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="special_requests" class="form-label">Special Requests</label>
+                        <textarea class="form-control" id="special_requests" name="special_requests" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitBooking()">Create Booking</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Set minimum date for check-in (today)
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('check_in').min = today;
+
+    // Update check-out min date when check-in changes
+    document.getElementById('check_in').addEventListener('change', function() {
+        document.getElementById('check_out').min = this.value;
+        updateBookingSummary();
+        calculatePrice();
+    });
+
+    // Update booking summary as user fills out form
+    function updateBookingSummary() {
+        const name = document.getElementById('name').value || '--';
+        const contact = document.getElementById('contact').value || '--';
+        const email = document.getElementById('email').value || '--';
+        const service = document.getElementById('service');
+        const serviceText = service.options[service.selectedIndex].text || '--';
+        const check_in = document.getElementById('check_in').value || '--';
+        const check_out = document.getElementById('check_out').value || '--';
+        const guests = document.getElementById('number_of_guests').value || '--';
+        const payment = document.getElementById('payment_method');
+        const paymentText = payment.options[payment.selectedIndex].text || '--';
+
+        document.getElementById('summary-name').textContent = name;
+        document.getElementById('summary-contact').textContent = contact;
+        document.getElementById('summary-email').textContent = email;
+        document.getElementById('summary-service').textContent = serviceText;
+        document.getElementById('summary-checkin').textContent = check_in;
+        document.getElementById('summary-checkout').textContent = check_out;
+        document.getElementById('summary-guests').textContent = guests;
+        document.getElementById('summary-payment').textContent = paymentText;
+    }
+
+    // Calculate price based on selections
+    function calculatePrice() {
+        const service = document.getElementById('service');
+        const check_in = document.getElementById('check_in').value;
+        const check_out = document.getElementById('check_out').value;
+        const guests = parseInt(document.getElementById('number_of_guests').value) || 0;
+
+        if (!service.value || !check_in || !check_out) {
+            resetPriceSummary();
+            return;
+        }
+
+        const startDate = new Date(check_in);
+        const endDate = new Date(check_out);
+        const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+        if (duration <= 0) {
+            resetPriceSummary();
+            return;
+        }
+
+        const basePrice = parseFloat(service.options[service.selectedIndex].text.split('₱')[1]);
+        const totalPrice = basePrice * duration;
+
+        document.getElementById('service-price').textContent = `₱${basePrice.toFixed(2)}/night`;
+        document.getElementById('duration-days').textContent = `${duration} ${duration === 1 ? 'day' : 'days'}`;
+        document.getElementById('guests-count').textContent = guests;
+        document.getElementById('total-price').textContent = `₱${totalPrice.toFixed(2)}`;
+    }
+
+    function resetPriceSummary() {
+        document.getElementById('service-price').textContent = '₱0.00';
+        document.getElementById('duration-days').textContent = '0 days';
+        document.getElementById('guests-count').textContent = '0';
+        document.getElementById('total-price').textContent = '₱0.00';
+    }
+
+    // Add event listeners to update summary and price
+    document.getElementById('name').addEventListener('input', updateBookingSummary);
+    document.getElementById('contact').addEventListener('input', updateBookingSummary);
+    document.getElementById('email').addEventListener('input', updateBookingSummary);
+    document.getElementById('service').addEventListener('change', function() {
+        updateBookingSummary();
+        calculatePrice();
+    });
+    document.getElementById('check_in').addEventListener('change', function() {
+        updateBookingSummary();
+        calculatePrice();
+    });
+    document.getElementById('check_out').addEventListener('change', function() {
+        updateBookingSummary();
+        calculatePrice();
+    });
+    document.getElementById('number_of_guests').addEventListener('input', function() {
+        updateBookingSummary();
+        calculatePrice();
+    });
+    document.getElementById('payment_method').addEventListener('change', updateBookingSummary);
+
+    // Submit booking form
+    function submitBooking() {
+        const form = document.getElementById('bookingForm');
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch("{% url 'add_booking' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                alert(data.message);
+                // Close modal and refresh page
+                $('#addBookingModal').modal('hide');
+                location.reload();
+            } else {
+                // Show error message
+                alert(data.message || 'Error creating booking');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while creating the booking');
+        });
+    }
+
+    // View booking details
+    function viewBooking(bookingId) {
+        window.location.href = `/booking/${bookingId}/`;
+    }
+
+    // Edit booking
+    function editBooking(bookingId) {
+        window.location.href = `/booking/${bookingId}/edit/`;
+    }
+
+    // Delete booking
+    function deleteBooking(bookingId) {
+        if (confirm('Are you sure you want to delete this booking?')) {
+            fetch(`/booking/${bookingId}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || 'Error deleting booking');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the booking');
+            });
+        }
+    }
+</script>
+{% endblock %} 

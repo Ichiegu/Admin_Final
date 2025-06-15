@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions | Storm's Beach and Country Club</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="img/favicon.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/transaction.css">
+</head>
+
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <button class="hamburger" id="sidebarToggle">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-menu">
+      <h3>Main</h3>
+      <ul>
+        <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+        <li><a href="booking.html"><i class="fas fa-calendar-alt"></i> <span>Bookings</span></a>
+        </li>
+        <li><a href="transaction.html" class="active"><i class="fas fa-exchange-alt"></i> <span>Transactions</span></a>
+        </li>
+        <li><a href="blogs.html"><i class="fas fa-blog"></i> <span>Blog/Reviews</span></a></li>
+      </ul>
+
+      <h3>Management</h3>
+      <ul>
+        <li><a href="services.html"><i class="fas fa-spa"></i> <span>Services</span></a></li>
+        <li><a href="staff.html"><i class="fas fa-briefcase"></i> <span>Staff</span></a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+      <button class="hamburger" id="mobileSidebarToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="logo">
+        <img src="img/storms-logo.png" alt="Storm's Logo">
+        <h1>Storm's Beach and Country Club</h1>
+      </div>
+
+      <div class="user-menu">
+        <div class="notification">
+          <i class="fas fa-bell"></i>
+          <span class="badge">5</span>
+        </div>
+
+        <div class="user-profile">
+          <img src="img/admin-avatar.jpg" alt="Admin User">
+          <div class="profile-dropdown">
+            <a href="#"><i class="fas fa-user"></i> My Profile</a>
+            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+      <div class="page-header">
+        <h1>Transactions</h1>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search transactions...">
+          <button type="submit">Search</button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="title">Total Revenue</div>
+          <div class="value">₱0</div>
+          <div class="change positive">
+            <i class="fas fa-arrow-up"></i> 0% from last month
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="title">Refunds Issued</div>
+          <div class="value">₱0</div>
+          <div class="change negative">
+            <i class="fas fa-arrow-down"></i> 0% from last month
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="title">Failed Transactions</div>
+          <div class="value">0</div>
+          <div class="change negative">
+            <i class="fas fa-equals"></i> Same as last month
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="title">Most Popular Method</div>
+          <div class="value">GCash (0%)</div>
+          <div class="change positive">
+            <i class="fas fa-arrow-up"></i> 0% increase
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Buttons -->
+      <div style="margin-bottom: 1.5rem; display: flex; gap: 0.75rem;">
+        <button class="btn btn-success">
+          <i class="fas fa-file-excel"></i> Export to Excel
+        </button>
+        <button class="btn btn-danger">
+          <i class="fas fa-file-pdf"></i> Export to PDF
+        </button>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="recent-transactions">
+        <h2>Recent Transactions</h2>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Guest</th>
+                <th>Service</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Reference</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TRX-1001</td>
+                <td>John Smith</td>
+                <td>Pool Cabana</td>
+                <td>₱1,200.00</td>
+                <td>Credit Card</td>
+                <td><span class="status success">Success</span></td>
+                <td>2023-10-15 14:30</td>
+                <td>REF-789456</td>
+                <td>
+                  <div class="action-icons">
+                    <a href="#" class="edit-transaction" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="delete-transaction" title="Delete"><i class="fas fa-trash"></i></a>
+                    <a href="#" class="receipt-transaction" title="Receipt"><i class="fas fa-receipt"></i></a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>TRX-1002</td>
+                <td>Elmer Santos</td>
+                <td>Beach Villa</td>
+                <td>₱3,500.00</td>
+                <td>GCash</td>
+                <td><span class="status success">Success</span></td>
+                <td>2023-10-16 09:15</td>
+                <td>REF-789457</td>
+                <td>
+                  <div class="action-icons">
+                    <a href="#" class="edit-transaction" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="delete-transaction" title="Delete"><i class="fas fa-trash"></i></a>
+                    <a href="#" class="receipt-transaction" title="Receipt"><i class="fas fa-receipt"></i></a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>TRX-1003</td>
+                <td>Paul Johnson</td>
+                <td>Spa Package</td>
+                <td>₱1,800.00</td>
+                <td>PayMaya</td>
+                <td><span class="status pending">Pending</span></td>
+                <td>2023-10-16 11:45</td>
+                <td>REF-789458</td>
+                <td>
+                  <div class="action-icons">
+                    <a href="#" class="edit-transaction" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="delete-transaction" title="Delete"><i class="fas fa-trash"></i></a>
+                    <a href="#" class="receipt-transaction" title="Receipt"><i class="fas fa-receipt"></i></a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>TRX-1004</td>
+                <td>Maria Garcia</td>
+                <td>Restaurant</td>
+                <td>₱850.00</td>
+                <td>Cash</td>
+                <td><span class="status success">Success</span></td>
+                <td>2023-10-16 19:30</td>
+                <td>REF-789459</td>
+                <td>
+                  <div class="action-icons">
+                    <a href="#" class="edit-transaction" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="delete-transaction" title="Delete"><i class="fas fa-trash"></i></a>
+                    <a href="#" class="receipt-transaction" title="Receipt"><i class="fas fa-receipt"></i></a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>TRX-1005</td>
+                <td>Robert Lee</td>
+                <td>Conference Room</td>
+                <td>₱5,000.00</td>
+                <td>Bank Transfer</td>
+                <td><span class="status failed">Failed</span></td>
+                <td>2023-10-17 10:00</td>
+                <td>REF-789460</td>
+                <td>
+                  <div class="action-icons">
+                    <a href="#" class="edit-transaction" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="delete-transaction" title="Delete"><i class="fas fa-trash"></i></a>
+                    <a href="#" class="receipt-transaction" title="Receipt"><i class="fas fa-receipt"></i></a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for Edit/Delete -->
+  <div id="transactionModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Edit Transaction</h3>
+      <form class="modal-form" id="transactionForm">
+        <div class="form-group">
+          <label for="transactionId">Transaction ID</label>
+          <input type="text" id="transactionId" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+          <label for="userId">User ID</label>
+          <input type="text" id="userId" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="serviceId">Service ID</label>
+          <input type="text" id="serviceId" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="amount">Amount</label>
+          <input type="number" id="amount" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="paymentMethod">Payment Method</label>
+          <select id="paymentMethod" class="form-control" required>
+            <option value="Credit Card">Credit Card</option>
+            <option value="GCash">GCash</option>
+            <option value="PayMaya">PayMaya</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cash">Cash</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="transactionType">Transaction Type</label>
+          <select id="transactionType" class="form-control" required>
+            <option value="Payment">Payment</option>
+            <option value="Refund">Refund</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="transactionDate">Transaction Date</label>
+          <input type="datetime-local" id="transactionDate" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="referenceCode">Reference Code</label>
+          <input type="text" id="referenceCode" class="form-control" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelTransaction">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content delete-modal-content">
+      <span class="close">&times;</span>
+      <h3>Confirm Deletion</h3>
+      <p>Are you sure you want to delete this transaction? This action cannot be undone.</p>
+      <div class="delete-modal-actions">
+        <button class="btn btn-secondary" id="cancelDelete">Cancel</button>
+        <button class="btn btn-danger" id="confirmDelete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle sidebar on mobile
+    document.addEventListener('DOMContentLoaded', function () {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+
+      // Toggle sidebar on mobile
+      mobileSidebarToggle.addEventListener('click', function () {
+        sidebar.classList.toggle('active');
+      });
+
+      // Close sidebar when clicking the close button
+      sidebarToggle.addEventListener('click', function () {
+        sidebar.classList.remove('active');
+      });
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener('click', function (event) {
+        if (window.innerWidth <= 992) {
+          if (!sidebar.contains(event.target) && !mobileSidebarToggle.contains(event.target)) {
+            sidebar.classList.remove('active');
+          }
+        }
+      });
+
+      // Notification click
+      document.querySelector('.notification').addEventListener('click', function () {
+        alert('You have 5 unread notifications');
+      });
+
+      // DOM Elements for modals
+      const transactionModal = document.getElementById('transactionModal');
+      const deleteModal = document.getElementById('deleteModal');
+      const closeButtons = document.querySelectorAll('.close');
+      const cancelTransaction = document.getElementById('cancelTransaction');
+      const cancelDelete = document.getElementById('cancelDelete');
+      const confirmDelete = document.getElementById('confirmDelete');
+      const transactionForm = document.getElementById('transactionForm');
+      const editButtons = document.querySelectorAll('.edit-transaction');
+      const deleteButtons = document.querySelectorAll('.delete-transaction');
+
+      /* ====================
+         EXPORT FUNCTIONALITY
+         ==================== */
+
+      // Check if export buttons exist before adding event listeners
+      const excelExportBtn = document.querySelector('.btn-success');
+      const pdfExportBtn = document.querySelector('.btn-danger');
+
+      if (excelExportBtn) {
+        excelExportBtn.addEventListener('click', exportToExcel);
+      }
+
+      if (pdfExportBtn) {
+        pdfExportBtn.addEventListener('click', exportToPDF);
+      }
+
+      // Enhanced function to get table data as array
+      function getTableData() {
+        try {
+          const table = document.querySelector('table');
+          if (!table) throw new Error('No table found for export');
+
+          const rows = table.querySelectorAll('tr');
+          if (rows.length < 2) throw new Error('No data rows found in table');
+
+          const data = [];
+          const headers = [];
+
+          // Get headers (skip the last column if it's actions)
+          rows[0].querySelectorAll('th').forEach((header, index) => {
+            if (index < rows[0].querySelectorAll('th').length - 1) {
+              headers.push(header.textContent.trim());
+            }
+          });
+          data.push(headers);
+
+          // Get rows data
+          for (let i = 1; i < rows.length; i++) {
+            const rowData = [];
+            const cells = rows[i].querySelectorAll('td');
+
+            // Skip the last cell if it contains action buttons
+            const cellsToProcess = cells.length - (rows[i].querySelector('.action-icons') ? 1 : 0);
+
+            for (let j = 0; j < cellsToProcess; j++) {
+              let cellContent = cells[j].textContent.trim();
+
+              // Format amount values (remove currency symbol)
+              if (headers[j] === 'Amount') {
+                cellContent = cellContent.replace(/[^\d.]/g, '');
+              }
+
+              rowData.push(cellContent);
+            }
+            data.push(rowData);
+          }
+
+          return data;
+        } catch (error) {
+          console.error('Error getting table data:', error);
+          alert('Error preparing data for export: ' + error.message);
+          return null;
+        }
+      }
+
+      // Enhanced Export to Excel function
+      function exportToExcel() {
+        try {
+          const data = getTableData();
+          if (!data) return;
+
+          // Create workbook with better metadata
+          const wb = XLSX.utils.book_new();
+          wb.Props = {
+            Title: "Transactions Export",
+            Subject: "Storm's Beach and Country Club Transactions",
+            Author: "Storm's Beach and Country Club",
+            CreatedDate: new Date()
+          };
+
+          // Create worksheet with data
+          const ws = XLSX.utils.aoa_to_sheet(data);
+
+          // Set column widths based on content
+          const colWidths = data[0].map((_, colIndex) => {
+            return {
+              wch: Math.max(
+                ...data.map(row => (row[colIndex] ? row[colIndex].toString().length : 10))
+              )
+            };
+          });
+          ws['!cols'] = colWidths;
+
+          // Add worksheet to workbook
+          XLSX.utils.book_append_sheet(wb, ws, "Transactions");
+
+          // Generate filename with timestamp
+          const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+          const filename = `transactions_export_${timestamp}.xlsx`;
+
+          // Generate Excel file
+          XLSX.writeFile(wb, filename);
+
+          // Show success message
+          showExportSuccess('Excel');
+        } catch (error) {
+          console.error('Excel export error:', error);
+          alert('Error exporting to Excel: ' + error.message);
+        }
+      }
+
+      // Enhanced Export to PDF function
+      function exportToPDF() {
+        try {
+          const data = getTableData();
+          if (!data) return;
+
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm'
+          });
+
+          // Add title and metadata
+          doc.setProperties({
+            title: "Transactions Export",
+            subject: "Storm's Beach and Country Club Transactions",
+            author: "Storm's Beach and Country Club"
+          });
+
+          // Add title
+          doc.setFontSize(16);
+          doc.setTextColor(40);
+          doc.setFont('helvetica', 'bold');
+          doc.text('Storm\'s Beach and Country Club - Transactions', 14, 15);
+
+          // Add subtitle with timestamp
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 20);
+
+          // Prepare data for autotable
+          const headers = data[0];
+          const rows = data.slice(1);
+
+          // Format amount columns to right-align
+          const amountColIndex = headers.indexOf('Amount');
+          const columnStyles = {};
+          if (amountColIndex !== -1) {
+            columnStyles[amountColIndex] = { cellWidth: 20, halign: 'right' };
+          }
+
+          // Create table
+          doc.autoTable({
+            head: [headers],
+            body: rows,
+            startY: 25,
+            styles: {
+              fontSize: 8,
+              cellPadding: 2,
+              valign: 'middle',
+              overflow: 'linebreak'
+            },
+            headStyles: {
+              fillColor: [67, 97, 238],
+              textColor: 255,
+              fontStyle: 'bold',
+              fontSize: 9
+            },
+            columnStyles: columnStyles,
+            alternateRowStyles: {
+              fillColor: [240, 240, 240]
+            },
+            margin: { left: 14, right: 14 },
+            tableWidth: 'auto'
+          });
+
+          // Generate filename with timestamp
+          const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+          const filename = `transactions_export_${timestamp}.pdf`;
+
+          // Save PDF
+          doc.save(filename);
+
+          // Show success message
+          showExportSuccess('PDF');
+        } catch (error) {
+          console.error('PDF export error:', error);
+          alert('Error exporting to PDF: ' + error.message);
+        }
+      }
+
+      // Show export success message
+      function showExportSuccess(format) {
+        const toast = document.createElement('div');
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.backgroundColor = '#4CAF50';
+        toast.style.color = 'white';
+        toast.style.padding = '12px 24px';
+        toast.style.borderRadius = '4px';
+        toast.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+        toast.style.zIndex = '10000';
+        toast.style.animation = 'fadeIn 0.3s, fadeOut 0.3s 2.7s';
+        toast.textContent = `${format} export generated successfully!`;
+
+        document.body.appendChild(toast);
+
+        // Remove after animation
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      }
+
+      /* ====================
+         MODAL FUNCTIONALITY
+         ==================== */
+
+      // Open Edit Transaction Modal
+      editButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          const row = e.target.closest('tr');
+          // Fill form with existing data
+          document.getElementById('transactionId').value = row.cells[0].textContent;
+          document.getElementById('userId').value = row.cells[1].textContent;
+          document.getElementById('serviceId').value = row.cells[2].textContent;
+          document.getElementById('amount').value = row.cells[3].textContent.replace('₱', '').replace(',', '');
+          document.getElementById('paymentMethod').value = row.cells[4].textContent;
+          document.getElementById('transactionType').value = row.cells[5].textContent.includes('Success') ? 'Payment' :
+            row.cells[5].textContent.includes('Pending') ? 'Payment' :
+              row.cells[5].textContent.includes('Failed') ? 'Cancelled' : 'Refund';
+          // Format date for datetime-local input
+          const dateStr = row.cells[6].textContent;
+          const [datePart, timePart] = dateStr.split(' ');
+          const [year, month, day] = datePart.split('-');
+          const [hours, minutes] = timePart.split(':');
+          const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+          document.getElementById('transactionDate').value = formattedDate;
+          document.getElementById('referenceCode').value = row.cells[7].textContent;
+          transactionModal.style.display = 'block';
+        });
+      });
+
+      // Open Delete Confirmation Modal
+      deleteButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          const row = e.target.closest('tr');
+          const transactionId = row.cells[0].textContent;
+          document.getElementById('deleteModal').setAttribute('data-transaction-id', transactionId);
+          deleteModal.style.display = 'block';
+        });
+      });
+
+      // Close Modals
+      function closeModals() {
+        transactionModal.style.display = 'none';
+        deleteModal.style.display = 'none';
+      }
+
+      closeButtons.forEach(button => {
+        button.addEventListener('click', closeModals);
+      });
+
+      cancelTransaction.addEventListener('click', closeModals);
+      cancelDelete.addEventListener('click', closeModals);
+
+      // Close when clicking outside modal
+      window.addEventListener('click', (e) => {
+        if (e.target === transactionModal || e.target === deleteModal) {
+          closeModals();
+        }
+      });
+
+      // Form Submission (demo only - doesn't actually save)
+      transactionForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Transaction saved successfully! (This is a demo - no data is actually saved)');
+        closeModals();
+      });
+
+      // Delete Confirmation (demo only - doesn't actually delete)
+      confirmDelete.addEventListener('click', () => {
+        const transactionId = deleteModal.getAttribute('data-transaction-id');
+        alert(`Transaction ${transactionId} deleted successfully! (This is a demo - no data is actually deleted)`);
+        closeModals();
+      });
+    });
+
+    document.head.appendChild(style);
+  </script>
+</body>
+
+</html>

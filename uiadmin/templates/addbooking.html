@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Booking | Storm's Beach and Country Club</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.png" type="image/png">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/addbook.css">
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <button class="hamburger" id="sidebarToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-menu">
+            <h3>Main</h3>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                <li><a href="booking.html" class="active"><i class="fas fa-calendar-alt"></i> <span>Bookings</span></a>
+                </li>
+                <li><a href="transaction.html"><i class="fas fa-exchange-alt"></i> <span>Transactions</span></a></li>
+                <li><a href="blogs.html"><i class="fas fa-blog"></i> <span>Blog/Reviews</span></a></li>
+            </ul>
+
+            <h3>Management</h3>
+            <ul>
+                <li><a href="services.html"><i class="fas fa-spa"></i> <span>Services</span></a></li>
+                <li><a href="staff.html"><i class="fas fa-briefcase"></i> <span>Staff</span></a></li>
+            </ul>
+        </div>
+    </aside>
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <button class="hamburger" id="mobileSidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <img src="img/storms-logo.png" alt="Storm's Logo">
+                <h1>Storm's Beach and Country Club</h1>
+            </div>
+
+            <div class="user-menu">
+                <div class="notification">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">5</span>
+                </div>
+
+                <div class="user-profile">
+                    <img src="img/admin-avatar.jpg" alt="Admin User">
+                    <div class="profile-dropdown">
+                        <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="dashboard-content">
+            <div class="page-header">
+                <h2>Add New Booking</h2>
+                <div class="alert alert-success" style="display:none;">
+                    Booking created successfully!
+                </div>
+                <div class="alert alert-error" style="display:none;"></div>
+            </div>
+
+            <div class="booking-container">
+                <div class="booking-form-container">
+                    <form method="post" id="bookingForm">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <!-- name -->
+                            <div class="form-group">
+                                <label for="name">Name <span class="required">*</span></label>
+                                <input type="text" id="name" name="name" class="form-control" required
+                                    placeholder="Enter name">
+                            </div>
+                            <!-- contact -->
+                            <div class="form-group">
+                                <label for="contact">Contact Number <span class="required">*</span></label>
+                                <input type="tel" id="contact" name="contact" class="form-control" required
+                                    placeholder="Enter contact number">
+                            </div>
+                        </div>
+                        <!-- email address -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" class="form-control"
+                                    placeholder="Enter email address">
+                            </div>
+                            <!-- service type -->
+                            <div class="form-group">
+                                <label for="service">Service Type <span class="required">*</span></label>
+                                <select id="service" name="service" class="form-control" required>
+                                    <option value="" disabled selected>Select a service</option>
+                                    {% for service in services %}
+                                    <option value="{{ service.id }}">{{ service.name }} - ₱{{ service.base_price }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <!-- check-in date -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="check_in">Check-in Date <span class="required">*</span></label>
+                                <input type="date" id="check_in" name="check_in" class="form-control" required
+                                    min="{{ today|date:'Y-m-d' }}">
+                            </div>
+                            <!-- check-out date -->
+                            <div class="form-group">
+                                <label for="check_out">Check-out Date <span class="required">*</span></label>
+                                <input type="date" id="check_out" name="check_out" class="form-control" required
+                                    min="{{ today|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                        <!-- number of guest -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="number_of_guests">Number of Guests <span class="required">*</span></label>
+                                <input type="number" id="number_of_guests" name="number_of_guests" class="form-control" required
+                                    placeholder="Enter number of guests" min="1">
+                            </div>
+                            <!-- Payment method -->
+                            <div class="form-group">
+                                <label for="payment_method">Payment Method</label>
+                                <select id="payment_method" name="payment_method" class="form-control">
+                                    <option value="" selected>Select payment method</option>
+                                    <option value="credit_card">Credit Card</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="gcash">GCash</option>
+                                    <option value="paymaya">PayMaya</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- special request -->
+                        <div class="form-group">
+                            <label for="special_requests">Special Requests</label>
+                            <textarea id="special_requests" name="special_requests" class="form-control" rows="4"
+                                placeholder="Any special requests or notes..."></textarea>
+                        </div>
+                        <!-- submit button -->
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-secondary">Clear Form</button>
+                            <button type="submit" class="btn btn-primary">Create Booking</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="booking-summary">
+                    <h2>Booking Summary</h2>
+                    <div class="booking-details">
+                        <h4>Guest Information</h4>
+                        <div class="detail-item">
+                            <span>Name:</span>
+                            <span id="summary-name">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Contact:</span>
+                            <span id="summary-contact">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Email:</span>
+                            <span id="summary-email">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Service Type:</span>
+                            <span id="summary-service">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Check-in date:</span>
+                            <span id="summary-checkin">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Check-out date:</span>
+                            <span id="summary-checkout">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Number of guests:</span>
+                            <span id="summary-guests">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Payment Method:</span>
+                            <span id="summary-payment">--</span>
+                        </div>
+
+                        <h4>Price Summary</h4>
+                        <div class="price-item">
+                            <span>Service:</span>
+                            <span id="service-price">₱0.00</span>
+                        </div>
+                        <div class="price-item">
+                            <span>Duration:</span>
+                            <span id="duration-days">0 days</span>
+                        </div>
+                        <div class="price-item">
+                            <span>Guests:</span>
+                            <span id="guests-count">0</span>
+                        </div>
+                        <div class="price-item price-total">
+                            <span>Total:</span>
+                            <span id="total-price">₱0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set minimum date for check-in (today)
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('check_in').min = today;
+
+        // Update check-out min date when check-in changes
+        document.getElementById('check_in').addEventListener('change', function () {
+            const checkinDate = this.value;
+            document.getElementById('check_out').min = checkinDate;
+
+            // If check-out is before new min date, clear it
+            if (document.getElementById('check_out').value && document.getElementById('check_out').value < checkinDate) {
+                document.getElementById('check_out').value = '';
+            }
+            updateBookingSummary();
+            calculatePrice();
+        });
+
+        // Form validation
+        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get all form elements
+            const service = document.getElementById('service');
+            const check_in = document.getElementById('check_in');
+            const check_out = document.getElementById('check_out');
+            const number_of_guests = document.getElementById('number_of_guests');
+            const payment_method = document.getElementById('payment_method');
+            const special_requests = document.getElementById('special_requests');
+            
+            const errorAlert = document.querySelector('.alert-error');
+            const successAlert = document.querySelector('.alert-success');
+            
+            // Hide any existing alerts
+            errorAlert.style.display = 'none';
+            successAlert.style.display = 'none';
+            
+            // Reset all borders
+            [service, check_in, check_out, number_of_guests].forEach(field => {
+                field.style.borderColor = '#ced4da';
+            });
+            
+            // Validate each field
+            let isValid = true;
+            let errorMessage = '';
+            
+            // Check required fields
+            if (!service.value) {
+                service.style.borderColor = 'red';
+                isValid = false;
+                errorMessage = 'Please select a service';
+            }
+            
+            if (!check_in.value) {
+                check_in.style.borderColor = 'red';
+                isValid = false;
+                errorMessage = errorMessage || 'Check-in date is required';
+            }
+            
+            if (!check_out.value) {
+                check_out.style.borderColor = 'red';
+                isValid = false;
+                errorMessage = errorMessage || 'Check-out date is required';
+            }
+            
+            if (!number_of_guests.value || number_of_guests.value < 1) {
+                number_of_guests.style.borderColor = 'red';
+                isValid = false;
+                errorMessage = errorMessage || 'Number of guests is required';
+            }
+            
+            // Check if checkout is after checkin
+            if (check_in.value && check_out.value && new Date(check_out.value) <= new Date(check_in.value)) {
+                check_out.style.borderColor = 'red';
+                isValid = false;
+                errorMessage = 'Check-out date must be after check-in date';
+            }
+            
+            // Show error if validation failed
+            if (!isValid) {
+                errorAlert.textContent = errorMessage || 'Please fill in all required fields';
+                errorAlert.style.display = 'block';
+                return;
+            }
+            
+            // If we get here, the form is valid
+            try {
+                // Show loading state
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.textContent = 'Creating booking...';
+                
+                // Send data to server using FormData from the form directly
+                const formData = new FormData(this);
+                
+                // Get CSRF token
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                // Send data to server
+                const response = await fetch("{% url 'add_booking' %}", {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin',  // Include cookies
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'  // Indicate this is an AJAX request
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success message
+                    successAlert.textContent = data.message;
+                    successAlert.style.display = 'block';
+                    
+                    // Redirect to booking list page after showing the success message
+                    setTimeout(() => {
+                        window.location.href = "{% url 'booking' %}";
+                    }, 1000);
+                } else {
+                    // Show error message
+                    errorAlert.textContent = data.message || 'Error creating booking';
+                    errorAlert.style.display = 'block';
+                    
+                    // Reset submit button
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorAlert.textContent = 'An error occurred while creating the booking. Please try again.';
+                errorAlert.style.display = 'block';
+                
+                // Reset submit button
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            }
+        });
+
+        // Add required field indicators to labels
+        document.querySelectorAll('label').forEach(label => {
+            if (label.getAttribute('for') in ['name', 'contact', 'service', 'check_in', 'check_out', 'number_of_guests']) {
+                if (!label.querySelector('.required')) {
+                    label.innerHTML += ' <span class="required">*</span>';
+                }
+            }
+        });
+
+        // Service prices mapping
+        const servicePrices = {
+            'guest-house': 120,
+            'beach-villa': 250,
+            'luxury-suite': 500,
+            'presidential': 1000,
+            'pool': 30
+        };
+
+        // Service display names
+        const serviceNames = {
+            'guest-house': 'Guest House',
+            'beach-villa': 'Beach Villa',
+            'luxury-suite': 'Conference Room',
+            'presidential': 'Exclusive Booking',
+            'pool': 'Pool Access'
+        };
+
+        // Payment method display names
+        const paymentNames = {
+            'credit': 'Credit Card',
+            'cash': 'Cash',
+            'transfer': 'Bank Transfer'
+        };
+
+        // Update booking summary as user fills out form
+        function updateBookingSummary() {
+            // Get all form values
+            const name = document.getElementById('name').value || '--';
+            const contact = document.getElementById('contact').value || '--';
+            const email = document.getElementById('email').value || '--';
+            const service = document.getElementById('service').value || '--';
+            const check_in = document.getElementById('check_in').value || '--';
+            const check_out = document.getElementById('check_out').value || '--';
+            const number_of_guests = document.getElementById('number_of_guests').value || '--';
+            const checkin = document.getElementById('checkin').value || '--';
+            const checkout = document.getElementById('checkout').value || '--';
+            const guests = document.getElementById('guests').value || '--';
+            const payment = document.getElementById('payment').value || '--';
+
+            // Update summary elements
+            document.getElementById('summary-name').textContent = name;
+            document.getElementById('summary-contact').textContent = contact;
+            document.getElementById('summary-email').textContent = email;
+            document.getElementById('summary-service').textContent = service ? serviceNames[service] : '--';
+            document.getElementById('summary-checkin').textContent = checkin;
+            document.getElementById('summary-checkout').textContent = checkout;
+            document.getElementById('summary-guests').textContent = guests;
+            document.getElementById('summary-payment').textContent = payment ? paymentNames[payment] : '--';
+        }
+
+        // Calculate price based on selections
+        function calculatePrice() {
+            const service = document.getElementById('service').value;
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const guests = parseInt(document.getElementById('guests').value) || 0;
+
+            if (!service || !checkin || !checkout) {
+                // Reset prices if required fields are missing
+                document.getElementById('service-price').textContent = '₱0.00';
+                document.getElementById('duration-days').textContent = '0 days';
+                document.getElementById('guests-count').textContent = '0';
+                document.getElementById('total-price').textContent = '₱0.00';
+                return;
+            }
+
+            // Calculate duration
+            const startDate = new Date(checkin);
+            const endDate = new Date(checkout);
+            const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+            if (duration <= 0) {
+                document.getElementById('duration-days').textContent = '0 days';
+                document.getElementById('total-price').textContent = '₱0.00';
+                return;
+            }
+
+            // Calculate base price
+            let basePrice = servicePrices[service];
+            let totalPrice = basePrice;
+
+            // Adjust for pool (per guest pricing)
+            if (service === 'pool') {
+                totalPrice = basePrice * guests;
+            }
+            // Others are per night/day pricing
+            else {
+                totalPrice = basePrice * duration;
+            }
+
+            // Update UI
+            document.getElementById('service-price').textContent = `₱${basePrice.toFixed(2)}` +
+                (service === 'pool' ? '/person' : '/night');
+            document.getElementById('duration-days').textContent = `${duration} ${duration === 1 ? 'day' : 'days'}`;
+            document.getElementById('guests-count').textContent = guests;
+            document.getElementById('total-price').textContent = `₱${totalPrice.toFixed(2)}`;
+        }
+
+        // Add event listeners to update summary and price
+        document.getElementById('name').addEventListener('input', updateBookingSummary);
+        document.getElementById('contact').addEventListener('input', updateBookingSummary);
+        document.getElementById('email').addEventListener('input', updateBookingSummary);
+        document.getElementById('service').addEventListener('change', function () {
+            updateBookingSummary();
+            calculatePrice();
+        });
+        document.getElementById('checkout').addEventListener('change', function () {
+            updateBookingSummary();
+            calculatePrice();
+        });
+        document.getElementById('guests').addEventListener('input', function () {
+            updateBookingSummary();
+            calculatePrice();
+        });
+        document.getElementById('payment').addEventListener('change', updateBookingSummary);
+
+        // Initialize summary and price calculation
+        updateBookingSummary();
+        calculatePrice();
+    </script>
+</body>
+
+</html>

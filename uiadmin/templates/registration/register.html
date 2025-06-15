@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Storm's Beach and Country Club</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome (local) -->
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png">
+</head>
+
+<body>
+    <!-- Header transition -->
+    <div class="page-transition">
+        <header>
+            <div class="logo-container">
+                <img src="{% static 'images/storms-logo.png' %}" alt="Storm's Beach and Country Club Logo">
+                <span class="logo-text">Storm's Beach and Country Club</span>
+            </div>
+        </header>
+        <!-- main content -->
+        <div class="main-container">
+            <div class="welcome-panel">
+                <div class="welcome-content">
+                    <h2>Welcome to Storm's Beach and Country Club</h2>
+                    <p>Already have an account?</p>
+                    <a href="{% url 'login' %}" class="btn transition-link">Sign In</a>
+                </div>
+            </div>
+
+            <div class="form-panel">
+                <h2>Create Your Account</h2>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" id="register-form">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="error-message">
+                                {{ form.email.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="error-message">
+                                {{ form.username.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password1">Password</label>
+                        <div class="password-container">
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="error-message">
+                                    {{ form.password1.errors }}
+                                </div>
+                            {% endif %}
+                            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('password1')"></i>
+                        </div>
+                        <small class="help-text">{{ form.password1.help_text }}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password2">Confirm Password</label>
+                        <div class="password-container">
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="error-message">
+                                    {{ form.password2.errors }}
+                                </div>
+                            {% endif %}
+                            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('password2')"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Create Account</button>
+                    <div id="spinner" class="spinner hidden"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function togglePasswordVisibility(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const icon = event.target;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Show error messages
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

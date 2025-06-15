@@ -1,0 +1,9 @@
+Django>=4.2.0
+python-dotenv
+django-crispy-forms
+crispy-bootstrap4
+django-cors-headers
+xlsxwriter
+xhtml2pdf
+mysqlclient
+whitenoise 

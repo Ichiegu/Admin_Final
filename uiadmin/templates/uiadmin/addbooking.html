@@ -1,0 +1,469 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add New Booking - Storm's Beach and Country Club{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/addbooking.css' %}">
+<style>
+    /* Error States */
+    .form-control.error {
+        border-color: #dc2626;
+        background-color: #fef2f2;
+    }
+
+    .field-error {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: block;
+    }
+
+    /* Notification */
+    .notification {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 1100;
+        animation: slideIn 0.3s ease;
+        max-width: 400px;
+    }
+
+    .notification.success {
+        background: #f0fdf4;
+        border-left: 4px solid #22c55e;
+    }
+
+    .notification.success i {
+        color: #22c55e;
+    }
+
+    .notification.error {
+        background: #fef2f2;
+        border-left: 4px solid #dc2626;
+    }
+
+    .notification.error i {
+        color: #dc2626;
+    }
+
+    .notification span {
+        font-size: 0.875rem;
+        color: #1f2937;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+
+    /* Form Validation */
+    .form-control:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-control.error:focus {
+        border-color: #dc2626;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    }
+
+    /* Loading State */
+    .btn.loading {
+        position: relative;
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .btn.loading i.fa-spinner {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* Required Field Indicator */
+    .required {
+        color: #dc2626;
+        margin-left: 0.25rem;
+    }
+
+    /* Form Group Spacing */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Alert Styling */
+    .alert {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .alert i {
+        font-size: 1.25rem;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+    }
+
+    .alert-danger i {
+        color: #dc2626;
+    }
+
+    .alert-success {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+    }
+
+    .alert-success i {
+        color: #22c55e;
+    }
+
+    /* Receipt Styles */
+    .booking-container {
+        display: flex;
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .booking-form-container {
+        flex: 2;
+    }
+
+    .receipt-container {
+        flex: 1;
+        position: sticky;
+        top: 2rem;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+    }
+
+    .receipt-header {
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .receipt-header h3 {
+        margin: 0;
+        color: #1f2937;
+    }
+
+    .receipt-details {
+        margin-bottom: 1.5rem;
+    }
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        color: #4b5563;
+    }
+
+    .receipt-total {
+        border-top: 2px solid #e5e7eb;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        font-weight: bold;
+        color: #1f2937;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="add-booking-container">
+    <div class="page-header">
+        <h1>New Booking</h1>
+        <a href="{% url 'booking' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Bookings
+        </a>
+    </div>
+
+    <div class="booking-container">
+        <div class="booking-form-container">
+            <form id="bookingForm" class="booking-form">
+                {% csrf_token %}
+                
+                <div class="form-section">
+                    <h3>Guest Information</h3>
+                    <div class="form-group">
+                        <label for="guest_name">Guest Name <span class="required">*</span></label>
+                        <input type="text" id="guest_name" name="guest_name" class="form-control" required
+                            placeholder="Enter guest name">
+                    </div>
+
+                    <h3>Service Details</h3>
+                    <div class="form-group">
+                        <label for="service">Select Service <span class="required">*</span></label>
+                        <select id="service" name="service" class="form-control" required>
+                            <option value="">Choose a service...</option>
+                            {% for service in services %}
+                            <option value="{{ service.id }}">{{ service.name }} - ₱{{ service.base_price }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="check_in">Check-in Date <span class="required">*</span></label>
+                            <input type="date" id="check_in" name="check_in" class="form-control" required
+                                min="{{ today|date:'Y-m-d' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="check_out">Check-out Date <span class="required">*</span></label>
+                            <input type="date" id="check_out" name="check_out" class="form-control" required
+                                min="{{ today|date:'Y-m-d' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="number_of_guests">Number of Guests <span class="required">*</span></label>
+                        <input type="number" id="number_of_guests" name="number_of_guests" class="form-control" required min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment_method">Payment Method</label>
+                        <select id="payment_method" name="payment_method" class="form-control">
+                            <option value="">Select payment method...</option>
+                            {% for method_code, method_name in payment_methods %}
+                            <option value="{{ method_code }}">{{ method_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="special_requests">Special Requests</label>
+                        <textarea id="special_requests" name="special_requests" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Booking</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'booking' %}'">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="receipt-container">
+            <div class="receipt-header">
+                <h3>Booking Summary</h3>
+            </div>
+            <div class="receipt-details">
+                <div class="receipt-row">
+                    <span>Guest Name:</span>
+                    <span id="receipt-guest-name">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Service:</span>
+                    <span id="receipt-service">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Check-in:</span>
+                    <span id="receipt-check-in">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Check-out:</span>
+                    <span id="receipt-check-out">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Number of Guests:</span>
+                    <span id="receipt-guests">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Base Price:</span>
+                    <span id="receipt-base-price">₱0.00</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Duration:</span>
+                    <span id="receipt-duration">-</span>
+                </div>
+            </div>
+            <div class="receipt-total receipt-row">
+                <span>Total Amount:</span>
+                <span id="receipt-total">₱0.00</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('bookingForm');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const successAlert = document.querySelector('.alert-success');
+    const errorAlert = document.querySelector('.alert-error');
+    const checkIn = document.getElementById('check_in');
+    const checkOut = document.getElementById('check_out');
+    
+    // Set minimum dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split('T')[0];
+    checkIn.min = todayStr;
+    checkOut.min = todayStr;
+    
+    function updateBookingSummary() {
+        const guestName = document.getElementById('guest_name');
+        const service = document.getElementById('service');
+        const numberOfGuests = document.getElementById('number_of_guests');
+        
+        // Update receipt details
+        document.getElementById('receipt-guest-name').textContent = 
+            guestName.value || '-';
+        document.getElementById('receipt-service').textContent = 
+            service.options[service.selectedIndex]?.text || '-';
+        document.getElementById('receipt-check-in').textContent = 
+            checkIn.value || '-';
+        document.getElementById('receipt-check-out').textContent = 
+            checkOut.value || '-';
+        document.getElementById('receipt-guests').textContent = 
+            numberOfGuests.value || '-';
+
+        // Calculate duration and total
+        if (checkIn.value && checkOut.value) {
+            const start = new Date(checkIn.value);
+            const end = new Date(checkOut.value);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            document.getElementById('receipt-duration').textContent = 
+                `${days} day${days !== 1 ? 's' : ''}`;
+
+            // Extract base price from service option text
+            const serviceText = service.options[service.selectedIndex]?.text || '';
+            const basePrice = parseFloat(serviceText.match(/₱(\d+)/)?.[1] || 0);
+            document.getElementById('receipt-base-price').textContent = 
+                `₱${basePrice.toFixed(2)}`;
+
+            const total = basePrice * days;
+            document.getElementById('receipt-total').textContent = 
+                `₱${total.toFixed(2)}`;
+        } else {
+            document.getElementById('receipt-duration').textContent = '-';
+            document.getElementById('receipt-total').textContent = '₱0.00';
+        }
+    }
+    
+    // Update check-out min date when check-in changes
+    checkIn.addEventListener('change', function() {
+        checkOut.min = this.value;
+        if (checkOut.value && checkOut.value < this.value) {
+            checkOut.value = this.value;
+        }
+        updateBookingSummary();
+    });
+    
+    // Update form fields on input
+    form.querySelectorAll('input, select, textarea').forEach(input => {
+        input.addEventListener('input', updateBookingSummary);
+        input.addEventListener('change', updateBookingSummary);
+    });
+
+    // Initial update
+    updateBookingSummary();
+
+    // Handle form submission
+    form.onsubmit = async function(e) {
+        e.preventDefault();
+        
+        // Prevent multiple submissions
+        if (submitButton.disabled) {
+            return;
+        }
+        
+        try {
+            const formData = new FormData(form);
+            const response = await fetch('{% url "add_booking" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'notification success';
+                successMessage.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span>${data.message}</span>
+                `;
+                document.body.appendChild(successMessage);
+
+                // Remove success message after 3 seconds
+                setTimeout(() => {
+                    successMessage.style.animation = 'slideOut 0.3s ease forwards';
+                    setTimeout(() => successMessage.remove(), 300);
+                }, 3000);
+
+                // Redirect to booking list
+                window.location.href = data.redirect_url;
+            } else {
+                // Show error message
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'notification error';
+                errorMessage.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>${data.message || 'Failed to create booking. Please try again.'}</span>
+                `;
+                document.body.appendChild(errorMessage);
+
+                // Remove error message after 3 seconds
+                setTimeout(() => {
+                    errorMessage.style.animation = 'slideOut 0.3s ease forwards';
+                    setTimeout(() => errorMessage.remove(), 300);
+                }, 3000);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'notification error';
+            errorMessage.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                <span>An error occurred. Please try again.</span>
+            `;
+            document.body.appendChild(errorMessage);
+
+            // Remove error message after 3 seconds
+            setTimeout(() => {
+                errorMessage.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => errorMessage.remove(), 300);
+            }, 3000);
+        }
+    };
+});
+</script>
+{% endblock %}

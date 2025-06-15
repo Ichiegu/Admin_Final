@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Transaction Receipt - {{ transaction.transaction_id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .receipt {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            color: #666;
+            margin: 5px 0;
+        }
+        .details {
+            margin-bottom: 30px;
+        }
+        .details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .details th, .details td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .details th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        .total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .status.success { background-color: #d4edda; color: #155724; }
+        .status.pending { background-color: #fff3cd; color: #856404; }
+        .status.failed { background-color: #f8d7da; color: #721c24; }
+        .status.refunded { background-color: #cce5ff; color: #004085; }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <div class="header">
+            <h1>Storm's Beach and Country Club</h1>
+            <p>Transaction Receipt</p>
+            <p>{{ transaction.transaction_date|date:"F d, Y H:i" }}</p>
+        </div>
+
+        <div class="details">
+            <table>
+                <tr>
+                    <th>Transaction ID:</th>
+                    <td>{{ transaction.transaction_id }}</td>
+                    <th>Status:</th>
+                    <td><span class="status {{ transaction.status }}">{{ transaction.get_status_display }}</span></td>
+                </tr>
+                <tr>
+                    <th>Guest Name:</th>
+                    <td>{{ guest.get_full_name }}</td>
+                    <th>Booking ID:</th>
+                    <td>{{ booking.booking_id }}</td>
+                </tr>
+                <tr>
+                    <th>Service:</th>
+                    <td>{{ service.name }}</td>
+                    <th>Payment Method:</th>
+                    <td>{{ transaction.get_payment_method_display }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Type:</th>
+                    <td>{{ transaction.get_transaction_type_display }}</td>
+                    <th>Reference Code:</th>
+                    <td>{{ transaction.reference_code|default:"-" }}</td>
+                </tr>
+            </table>
+
+            <div class="total">
+                Total Amount: ₱{{ transaction.amount }}
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing Storm's Beach and Country Club!</p>
+            <p>For any inquiries, please contact us at support@stormsbeach.com</p>
+            <p>This is a computer-generated receipt. No signature required.</p>
+        </div>
+    </div>
+</body>
+</html> 

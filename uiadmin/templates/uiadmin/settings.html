@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings - Storm's Beach and Country Club{% endblock %}
+
+{% block content %}
+<div class="dashboard-content">
+    <div class="page-header">
+        <h1>Settings</h1>
+    </div>
+
+    <div class="card">
+        <p>{{ message }}</p>
+        <p>This is a placeholder for your settings page. You can add various configuration options here.</p>
+        <p>Feel free to customize this page with actual settings forms and functionalities.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+<style>
+    .card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-top: 1.5rem;
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,640 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blog Management | Storm's Beach and Country Club{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<style>
+    .dashboard-content {
+        padding: 2rem;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.75rem;
+        color: #2c3e50;
+        margin: 0;
+    }
+
+    /* Stats Cards */
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card .title {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card .value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card .change {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .change.positive { color: #10b981; }
+    .change.negative { color: #ef4444; }
+    .change.neutral { color: #64748b; }
+
+    /* Blog Grid */
+    .blog-grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+    .blog-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .blog-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .blog-content {
+        padding: 1.5rem;
+    }
+
+    .blog-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .blog-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+
+    .blog-excerpt {
+        color: #4a5568;
+        margin-bottom: 1.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .blog-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .blog-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+
+    .status-draft {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+    .status-published {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-archived {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .blog-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+    }
+
+    .edit-btn {
+        background: #3b82f6;
+    }
+
+    .edit-btn:hover {
+        background: #2563eb;
+    }
+
+    .delete-btn {
+        background: #ef4444;
+    }
+
+    .delete-btn:hover {
+        background: #dc2626;
+    }
+
+    .add-btn {
+        padding: 0.75rem 1.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .add-btn:hover {
+        background: #2563eb;
+    }
+
+    /* Search and Filters */
+    .filters-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .search-bar {
+        flex: 1;
+        min-width: 200px;
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: white;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+    }
+
+    .filter-select {
+        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: white;
+        color: #2c3e50;
+        font-size: 0.95rem;
+        min-width: 160px;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+    }
+
+    /* Blog Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1050;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        overflow: auto;
+    }
+
+    .modal.show {
+        display: block;
+    }
+
+    .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: 1.75rem auto;
+        max-width: 800px;
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 1px solid #dee2e6;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+
+    .modal-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a202c;
+    }
+
+    .btn-close {
+        padding: 0.5rem;
+        margin: -0.5rem -0.5rem -0.5rem auto;
+        background: none;
+        border: 0;
+        font-size: 1.5rem;
+        line-height: 1;
+        color: #6b7280;
+        cursor: pointer;
+    }
+
+    .btn-close:hover {
+        color: #1a202c;
+    }
+
+    .modal-body {
+        padding: 1rem;
+        max-height: calc(100vh - 210px);
+        overflow-y: auto;
+    }
+
+    .modal-footer {
+        padding: 1rem;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    /* Form Controls */
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #4a5568;
+    }
+
+    .form-control, .form-select {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #4a5568;
+        background-color: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.375rem;
+        transition: border-color 0.15s ease-in-out;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #3b82f6;
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 0.375rem;
+        transition: all 0.15s ease-in-out;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #3b82f6;
+        border: 1px solid #3b82f6;
+    }
+
+    .btn-primary:hover {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+
+    .btn-secondary {
+        color: #4a5568;
+        background-color: #e2e8f0;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+        background-color: #cbd5e1;
+        border-color: #cbd5e1;
+    }
+
+    @media (max-width: 768px) {
+        .modal-dialog {
+            margin: 1rem;
+        }
+
+        .modal-body {
+            max-height: calc(100vh - 180px);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-content">
+    <div class="page-header">
+        <h1>Blog Management</h1>
+        <button class="add-btn" onclick="openAddBlogModal()">
+            <i class="fas fa-plus"></i> Add New Blog Post
+        </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-cards">
+        <div class="stat-card">
+            <div class="title">Total Posts</div>
+            <div class="value">{{ total_posts }}</div>
+            <div class="change neutral">
+                <i class="fas fa-newspaper"></i> All time
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="title">Published Posts</div>
+            <div class="value">{{ published_posts }}</div>
+            <div class="change positive">
+                <i class="fas fa-check-circle"></i> Live
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="title">Draft Posts</div>
+            <div class="value">{{ draft_posts }}</div>
+            <div class="change neutral">
+                <i class="fas fa-edit"></i> In progress
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="filters-bar">
+        <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search blog posts...">
+        </div>
+
+        <select class="filter-select" id="statusFilter">
+            <option value="">All Status</option>
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+            <option value="archived">Archived</option>
+        </select>
+
+        <select class="filter-select" id="sortFilter">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="title">Title A-Z</option>
+        </select>
+    </div>
+
+    <!-- Blog Grid -->
+    <div class="blog-grid">
+        {% for post in blog_posts %}
+        <div class="blog-card">
+            {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="blog-image">
+            {% else %}
+                <img src="{% static 'img/default-blog.jpg' %}" alt="{{ post.title }}" class="blog-image">
+            {% endif %}
+            <div class="blog-content">
+                <h2 class="blog-title">{{ post.title }}</h2>
+                <div class="blog-meta">
+                    <span><i class="fas fa-user"></i> {{ post.author.get_full_name|default:post.author.username }}</span>
+                    <span><i class="fas fa-calendar"></i> {{ post.created_at|date:"M d, Y" }}</span>
+                </div>
+                <div class="blog-excerpt">{{ post.content|truncatewords:30 }}</div>
+                <div class="blog-footer">
+                    <span class="blog-status status-{{ post.status }}">{{ post.status }}</span>
+                    <div class="blog-actions">
+                        <button class="action-btn edit-btn" onclick="editBlogPost('{{ post.id }}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteBlogPost('{{ post.id }}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <i class="fas fa-newspaper"></i>
+            <p>No blog posts found</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add/Edit Blog Modal -->
+<div class="modal" id="blogModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-edit"></i> <span id="modalTitle">Add New Blog Post</span></h5>
+                <button type="button" class="btn-close" onclick="closeBlogModal()">×</button>
+            </div>
+            <form id="blogForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Content</label>
+                        <textarea class="form-control" id="content" name="content" rows="6" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="featured_image" class="form-label">Featured Image</label>
+                        <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeBlogModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Blog Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filter functionality
+    const statusFilter = document.getElementById('statusFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const searchInput = document.querySelector('.search-input');
+
+    function applyFilters() {
+        const status = statusFilter.value;
+        const searchTerm = searchInput.value.toLowerCase();
+        const blogCards = document.querySelectorAll('.blog-card');
+
+        blogCards.forEach(card => {
+            const cardStatus = card.querySelector('.blog-status').textContent.toLowerCase();
+            const cardTitle = card.querySelector('.blog-title').textContent.toLowerCase();
+            const cardContent = card.querySelector('.blog-excerpt').textContent.toLowerCase();
+
+            const statusMatch = !status || cardStatus === status;
+            const searchMatch = !searchTerm || 
+                cardTitle.includes(searchTerm) || 
+                cardContent.includes(searchTerm);
+
+            card.style.display = statusMatch && searchMatch ? 'block' : 'none';
+        });
+    }
+
+    statusFilter.addEventListener('change', applyFilters);
+    sortFilter.addEventListener('change', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+
+    // Blog post actions
+    window.openAddBlogModal = function() {
+        document.getElementById('modalTitle').textContent = 'Add New Blog Post';
+        document.getElementById('blogForm').reset();
+        document.getElementById('blogModal').classList.add('show');
+    };
+
+    window.closeBlogModal = function() {
+        document.getElementById('blogModal').classList.remove('show');
+        document.getElementById('blogForm').reset();
+    };
+
+    window.editBlogPost = function(postId) {
+        fetch(`/blogs/${postId}/details/`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('modalTitle').textContent = 'Edit Blog Post';
+                document.getElementById('title').value = data.title;
+                document.getElementById('content').value = data.content;
+                document.getElementById('status').value = data.status;
+                document.getElementById('blogForm').dataset.postId = postId;
+                document.getElementById('blogModal').classList.add('show');
+            });
+    };
+
+    window.deleteBlogPost = function(postId) {
+        if (confirm('Are you sure you want to delete this blog post?')) {
+            fetch(`/blogs/${postId}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const blogCard = document.querySelector(`.blog-card[data-id="${postId}"]`);
+                    if (blogCard) {
+                        blogCard.remove();
+                    }
+                }
+            });
+        }
+    };
+
+    // Form submission
+    document.getElementById('blogForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const postId = this.dataset.postId;
+        const formData = new FormData(this);
+        
+        const url = postId ? `/blogs/${postId}/edit/` : '/blogs/add/';
+        
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Booking Details</h2>
+                    <a href="{% url 'booking' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Bookings
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Guest Information</h3>
+                            <table class="table">
+                                <tr>
+                                    <th>Booking ID:</th>
+                                    <td>#{{ booking.booking_id }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Guest Name:</th>
+                                    <td>{{ booking.guest_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Number of Guests:</th>
+                                    <td>{{ booking.number_of_guests }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Contact:</th>
+                                    <td>{{ booking.guest.email }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h3>Booking Information</h3>
+                            <table class="table">
+                                <tr>
+                                    <th>Service:</th>
+                                    <td>{{ booking.service.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Check-in Date:</th>
+                                    <td>{{ booking.check_in|date:"F d, Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Check-out Date:</th>
+                                    <td>{{ booking.check_out|date:"F d, Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td><span class="status {{ booking.status }}">{{ booking.status|title }}</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h3>Payment Information</h3>
+                            <table class="table">
+                                <tr>
+                                    <th>Daily Rate:</th>
+                                    <td>₱{{ daily_rate }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Number of Nights:</th>
+                                    <td>{{ nights }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Total Amount:</th>
+                                    <td>₱{{ total_amount }}</td>
+                                </tr>
+                                {% if transaction %}
+                                <tr>
+                                    <th>Payment Status:</th>
+                                    <td><span class="status {{ transaction.status }}">{{ transaction.status|title }}</span></td>
+                                </tr>
+                                <tr>
+                                    <th>Payment Method:</th>
+                                    <td>{{ transaction.payment_method|title }}</td>
+                                </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h3>Additional Information</h3>
+                            <table class="table">
+                                <tr>
+                                    <th>Special Requests:</th>
+                                    <td>{{ booking.special_requests|default:"None" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Booking Date:</th>
+                                    <td>{{ booking.created_at|date:"F d, Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Last Updated:</th>
+                                    <td>{{ booking.updated_at|date:"F d, Y" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    {% if transaction %}
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <a href="{% url 'transaction_receipt' transaction.id %}" class="btn btn-primary">
+                                <i class="fas fa-file-invoice"></i> View Receipt
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        margin: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .table th {
+        width: 200px;
+        background-color: #f8f9fa;
+    }
+    
+    .status {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+    
+    .status.pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .status.confirmed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status.cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .status.completed {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+</style>
+{% endblock %} 
